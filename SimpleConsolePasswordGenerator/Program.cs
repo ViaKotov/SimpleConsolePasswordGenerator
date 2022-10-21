@@ -4,189 +4,209 @@ namespace SimpleConsolePasswordGenerator
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            string appName = "Console Password Generator v1.0";
-            Console.Title = appName;
-
             string passwordLength;
-            
-            var useNumbers = new bool();
-            var useSymbols = new bool();
-            var useUppercase = new bool();
+            string useUppercase;
+            string useNumbers;
+            string useSymbols;
 
-            ConsolePassword.SuccessBackgroundMessage($"\n {appName} \n\n");
-            ConsolePassword.WarningBackgroundMessage(">>>");
-            ConsolePassword.DefaultMessage(" Введите желаемую длину пароля: ");
-            passwordLength = Console.Read().ToString();
-            /*if(!ConsolePassword.IsNumeric(passwordLength))
-            {
-                if(Convert.ToInt32(passwordLength) <= 0)
-                {
-                    ConsolePassword.DangerMessage("\n <!> Неверно введенное значение.");
-                    ConsolePassword.DefaultMessage("\n Введите желаемую длину пароля: ");
-                    passwordLength = Console.Read().ToString();
-                }
-            }
-            else
-            {
 
-            }*/
-            ConsolePassword.DefaultMessage("\n Использовать цифры? [ Y - да | N - нет ]");
+            Console.WriteLine("Enter password length:\n");
+            passwordLength = Console.ReadLine();
+            Password.Len.Parse(passwordLength);
 
-            if (Console.Read().ToString() != "Y" || Console.Read().ToString() != "y" 
-                || Console.Read().ToString() != "N" || Console.Read().ToString() != "n")
-            {
-                ConsolePassword.DangerMessage("\n <!> Неверно введенное значение.");
-                ConsolePassword.DefaultMessage("\n Использовать цифры? [ Y - да | N - нет ]");
-            }
-            else if(Console.Read().ToString() == "Y" || Console.Read().ToString() == "y")
-            {
-                useNumbers = true;
-            }
-            else if(Console.Read().ToString() == "N" || Console.Read().ToString() == "n")
-            {
-                useNumbers = false;
-            }
+            Console.WriteLine("Do you want to use uppercase?     [ Y ] - yes     [ N ] - no\n");
+            useUppercase = Console.ReadLine();
+            Password.Uppercase.Parse(useUppercase);
 
-            ConsolePassword.DefaultMessage("\n Использовать символы? [ Y - да | N - нет ]");
+            Console.WriteLine("Do you want to use numbers?     [ Y ] - yes     [ N ] - no\n");
+            useNumbers = Console.ReadLine();
+            Password.Numbers.Parse(useNumbers);
 
-            if (Console.Read().ToString() != "Y" || Console.Read().ToString() != "y"
-                || Console.Read().ToString() != "N" || Console.Read().ToString() != "n")
-            {
-                ConsolePassword.DangerMessage("\n <!> Неверно введенное значение.");
-                ConsolePassword.DefaultMessage("\n Использовать символы? [ Y - да | N - нет ]");
-            }
-            else if (Console.Read().ToString() == "Y" || Console.Read().ToString() == "y")
-            {
-                useSymbols = true;
-            }
-            else if (Console.Read().ToString() == "N" || Console.Read().ToString() == "n")
-            {
-                useSymbols = false;
-            }
+            Console.WriteLine("Do you want to use symbols?     [ Y ] - yes     [ N ] - no\n");
+            useSymbols = Console.ReadLine();
+            Password.Symbols.Parse(useSymbols);
 
-            ConsolePassword.DefaultMessage("\n Использовать верхний регистр? [ Y - да | N - нет ]");
-
-            if (Console.Read().ToString() != "Y" || Console.Read().ToString() != "y"
-                || Console.Read().ToString() != "N" || Console.Read().ToString() != "n")
-            {
-                ConsolePassword.DangerMessage("\n <!> Неверно введенное значение.");
-                ConsolePassword.DefaultMessage("\n верхний регистр? [ Y - да | N - нет ]");
-            }
-            else if (Console.Read().ToString() == "Y" || Console.Read().ToString() == "y")
-            {
-                useUppercase = true;
-            }
-            else if (Console.Read().ToString() == "N" || Console.Read().ToString() == "n")
-            {
-                useUppercase = true;
-            }
-
-            ConsolePassword.InfoMessage($"\n\n\n Будет сгенерирован пароль со следующими требованиями:" +
-                $"\n\t Длина пароля - {passwordLength}" +
-                $"\n\t  Использовать цифры - {useNumbers}" +
-                $"\n\t Использовать символы - {useSymbols}" +
-                $"\n\t Использовать верхний регистр - {useUppercase}");
+            Password.Generate();
 
             Console.ReadLine();
         }
-        /// <summary>
-        /// Класс ConsolePassword хранит в себе все переменные и методы, которые используются в моей утилите.
-        /// </summary>
-        public class ConsolePassword
-        { 
-            
-            public static bool IsNumeric(string str)
+
+        class Password
+        {
+            private static string generateResult;
+            public static void Generate()
             {
-                bool isNumber = int.TryParse(str, out _);
-                return isNumber;
-            }
-            public static void DefaultMessage(string msg)
-            {
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(msg);
-            }
-            public static void MutedMessage(string msg)
-            {
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.Write(msg);
-            }
-            public static void PrimaryMessage(string msg)
-            {
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.Gray;
-                Console.Write(msg);
-            }
-            public static void SuccessMessage(string msg)
-            {
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write(msg);
-            }
-            public static void InfoMessage(string msg)
-            {
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write(msg);
-            }
-            public static void WarningMessage(string msg)
-            {
-                Console.BackgroundColor = ConsoleColor.Black;
+                for(int i = 0; i < Password.Len.resultValue; i++)
+                {
+                    Random random = new Random();
+                    generateResult += random.Next(i, 9).ToString();
+                }
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write(msg);
-            }
-            public static void DangerMessage(string msg)
-            {
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write(msg);
+                Console.WriteLine($"{generateResult}");
+                Console.ForegroundColor = ConsoleColor.White;
             }
 
-            public static void DefaultBackgroundMessage(string msg)
+            public class Len
             {
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(msg);
+                public static double resultValue;
+                public static void Parse(string input)
+                {
+                    if (!double.TryParse(input, out resultValue))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Password length is not numeric\n");
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine("Enter password length:\n");
+                        input = Console.ReadLine();
+                        Password.Len.Parse(input);
+                    }
+                    else if (resultValue <= 0)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Password length is less or equal than 0\n");
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine("Enter password length:\n");
+                        input = Console.ReadLine();
+                        Password.Len.Parse(input);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Password length is {(input)} symbols");
+                        Delimiter();
+                    }
+                }
             }
-            public static void MutedBackgroundMessage(string msg)
+
+            public class Uppercase
             {
-                Console.BackgroundColor = ConsoleColor.DarkGray;
-                Console.ForegroundColor = ConsoleColor.Black;
-                Console.Write(msg);
+                public static bool uppercaseResult;
+                public static void Parse(string input)
+                {
+                    switch (input)
+                    {
+                        case "Y":
+                        case "y":
+                        case "yes":
+                        case "Yes":
+                        case "YES":
+                            uppercaseResult = true;
+                            Console.WriteLine("Password will include uppercase letters.");
+                            Delimiter();
+                            break;
+
+                        case "N":
+                        case "n":
+                        case "no":
+                        case "No":
+                        case "NO":
+                            uppercaseResult = false;
+                            Console.WriteLine("Password won't include uppercase letters.");
+                            Delimiter();
+                            break;
+
+                        default:
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("<!> Invalid value.");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Do you want to use uppercase?     [ Y ] - yes     [ N ] - no\n");
+                            input = Console.ReadLine();
+                            Password.Uppercase.Parse(input);
+                            break;
+                    }
+                }
             }
-            public static void PrimaryBackgroundMessage(string msg)
+
+            public class Numbers
             {
-                Console.BackgroundColor = ConsoleColor.Gray;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(msg);
+                public static bool numbersResult;
+                public static void Parse(string input)
+                {
+                    switch (input)
+                    {
+                        case "Y":
+                        case "y":
+                        case "yes":
+                        case "Yes":
+                        case "YES":
+                            numbersResult = true;
+                            Console.WriteLine("\nPassword will include numbers.");
+                            Delimiter();
+                            break;
+
+                        case "N":
+                        case "n":
+                        case "no":
+                        case "No":
+                        case "NO":
+                            numbersResult = false;
+                            Console.WriteLine("\nPassword won't include numbers.");
+                            Delimiter();
+                            break;
+
+                        default:
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("<!> Invalid value.");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Do you want to use numbers?     [ Y ] - yes     [ N ] - no\n");
+                            input = Console.ReadLine();
+                            Password.Numbers.Parse(input);
+                            break;
+                    }
+                }
             }
-            public static void SuccessBackgroundMessage(string msg)
+
+            public class Symbols
             {
-                Console.BackgroundColor = ConsoleColor.Green;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(msg);
+                public static bool symbolsResult;
+                public static void Parse(string input)
+                {
+                    switch (input)
+                    {
+                        case "Y":
+                        case "y":
+                        case "yes":
+                        case "Yes":
+                        case "YES":
+                            symbolsResult = true;
+                            Console.WriteLine("Password will include symbols.");
+                            Delimiter();
+                            break;
+
+                        case "N":
+                        case "n":
+                        case "no":
+                        case "No":
+                        case "NO":
+                            symbolsResult = false;
+                            Console.WriteLine("\nPassword won't include symbols.");
+                            Delimiter();
+                            break;
+
+                        default:
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("<!> Invalid value.");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Do you want to use symbols?     [ Y ] - yes     [ N ] - no\n");
+                            input = Console.ReadLine();
+                            Password.Symbols.Parse(input);
+                            break;
+                    }
+                }
             }
-            public static void InfoBackgroundMessage(string msg)
-            {
-                Console.BackgroundColor = ConsoleColor.Cyan;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(msg);
-            }
-            public static void WarningBackgroundMessage(string msg)
-            {
-                Console.BackgroundColor = ConsoleColor.Yellow; 
-                Console.ForegroundColor = ConsoleColor.Black;
-                Console.Write(msg);
-            }
-            public static void DangerBackgroundMessage(string msg)
-            {
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(msg);
-            }
+        }
+
+
+
+ 
+        public static void Delimiter()
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("===============\n");
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }
