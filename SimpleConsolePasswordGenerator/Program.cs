@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace SimpleConsolePasswordGenerator
 {
@@ -38,10 +39,19 @@ namespace SimpleConsolePasswordGenerator
             private static string generateResult;
             public static void Generate()
             {
-                for(int i = 0; i < Password.Len.resultValue; i++)
+                Random random = new Random();
+                for (int i = 0; i < Password.Len.resultValue; i++)
                 {
-                    Random random = new Random();
-                    generateResult += random.Next(i, 9).ToString();
+                    generateResult += Convert.ToChar(random.Next(97, 123));
+                }
+                if (Password.Numbers.numbersResult == true)
+                {
+                    Random idx = new Random();//TODO Доработать/переработать генерацию пароля
+                    for (int j = 0; j < Password.Len.resultValue; j++)
+                    {
+                        generateResult.Replace(generateResult[j], Convert.ToChar(idx.Next(48, 58)));
+                        generateResult.Insert(j, idx.Next(0, 10).ToString());
+                    }
                 }
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"{generateResult}");
